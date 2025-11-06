@@ -27,14 +27,6 @@ environment:
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
-geolocator: ^11.0.0
-permission_handler: ^11.3.1
-geocoding: ^3.0.0
-intl: ^0.18.1
-tring_similarity: ^2.1.1
-shared_preferences: ^2.2.2
-flutter_multi_formatter: ^2.13.10
-fl_chart: ^1.1.1
 
 dependencies:
   flutter:
@@ -43,6 +35,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  geolocator: ^11.0.0
+  permission_handler: ^11.3.1
+  geocoding: ^3.0.0
+  intl: ^0.18.1
+  string_similarity: ^2.1.1
+  shared_preferences: ^2.2.2
+  flutter_multi_formatter: ^2.13.10
+  carousel_slider: ^5.1.1
+  http: ^1.5.0
 
 dev_dependencies:
   flutter_test:
