@@ -160,8 +160,10 @@ class _Home_PageState extends State<Home_Page> {
         SizedBox(width: 10),
         CarouselSlider.builder(
           itemCount: posterList.length,
-          itemBuilder: itemBuilder,
-          options: opstions,
+          itemBuilder: (context, Index, realIndex) {
+            return Container();
+          },
+          options: options,
         ),
       ],
     );
