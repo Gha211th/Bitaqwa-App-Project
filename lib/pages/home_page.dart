@@ -147,7 +147,7 @@ class _Home_PageState extends State<Home_Page> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            _buildCarouselSection(),
           ],
         ),
       ),
@@ -157,7 +157,7 @@ class _Home_PageState extends State<Home_Page> {
   Widget _buildCarouselSection() {
     return Column(
       children: [
-        SizedBox(width: 10),
+        SizedBox(height: 10),
         CarouselSlider.builder(
           itemCount: posterList.length,
           itemBuilder: (context, Index, realIndex) {
