@@ -161,9 +161,10 @@ class _Home_PageState extends State<Home_Page> {
         CarouselSlider.builder(
           itemCount: posterList.length,
           itemBuilder: (context, Index, realIndex) {
-            return Container();
+            final poster = posterList[Index];
+            return Container(child: Image.asset(poster));
           },
-          options: options,
+          options: CarouselOptions(),
         ),
       ],
     );
