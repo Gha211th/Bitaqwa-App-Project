@@ -32,128 +32,46 @@ class _Home_PageState extends State<Home_Page> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 130,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.yellow[400],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 10,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(),
-                            child: Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/ic_menu_doa.png',
-                                    ),
-                                    Text("Doa Dan Dzikir"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 10,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(),
-                            child: Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/ic_menu_video_kajian.png',
-                                    ),
-                                    Text("Video Kajian"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 10,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(),
-                            child: Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/ic_menu_jadwal_sholat.png',
-                                    ),
-                                    Text("Jadwal Sholat"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 10,
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(),
-                            child: Row(
-                              children: [
-                                Column(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/ic_menu_zakat.png',
-                                    ),
-                                    Text("Zakat"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            _buildCarouselSection(),
-          ],
+          children: [_menuBuildGridsection(), _buildCarouselSection()],
         ),
       ),
     );
   }
 
+  Widget _buildMenuItem(String iconPath, String title, String rootName) {
+    return Column(children: [Image.asset(iconPath, width: 35), Text(title)]);
+  }
+
+  Widget _menuBuildGridsection() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.count(
+        crossAxisCount: 4,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa Harian', '/doa'),
+          _buildMenuItem(
+            'assets/images/ic_menu_jadwal_sholat.png',
+            'Doa Harian',
+            '/doa',
+          ),
+          _buildMenuItem(
+            'assets/images/ic_menu_video_kajian.png',
+            'Doa Harian',
+            '/doa',
+          ),
+          _buildMenuItem(
+            'assets/images/ic_menu_zakat.png',
+            'Transaksi Zakat',
+            '/doa',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============== widget carousel section ================
   Widget _buildCarouselSection() {
     return Column(
       children: [
