@@ -19,7 +19,7 @@ class Home_Page extends StatefulWidget {
 
 class _Home_PageState extends State<Home_Page> {
   final CarouselController _controller = CarouselController();
-  final _currentIndex = 0;
+  int _currentIndex = 0;
 
   final posterList = const <String>[
     'assets/images/ramadan.jpg',
@@ -162,9 +162,27 @@ class _Home_PageState extends State<Home_Page> {
           itemCount: posterList.length,
           itemBuilder: (context, Index, realIndex) {
             final poster = posterList[Index];
-            return Container(child: Image.asset(poster));
+            return Container(
+              margin: EdgeInsets.all(20),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  poster,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
           },
-          options: CarouselOptions(),
+          options: CarouselOptions(
+            autoPlay: true,
+            height: 350,
+            enlargeCenterPage: true,
+            viewportFraction: 0.7,
+            onPageChanged: (index, reason) {
+              setState(() => _currentIndex = index);
+            },
+          ),
         ),
       ],
     );
