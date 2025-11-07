@@ -184,7 +184,31 @@ class _Home_PageState extends State<Home_Page> {
             },
           ),
         ),
+        // DOT INDIKATOR
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: posterList.asMap().entries.map((entry) {
+            return GestureDetector(
+              onTap: () => _currentIndex.animateToPage(entry.key),
+              child: Container(
+                width: 10,
+                height: 10,
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: _currentIndex == entry.key
+                      ? Colors.yellow[300]
+                      : Colors.grey,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
       ],
     );
   }
+}
+
+extension on int {
+  void animateToPage(int key) {}
 }
