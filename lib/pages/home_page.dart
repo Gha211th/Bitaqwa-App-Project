@@ -33,40 +33,102 @@ class _Home_PageState extends State<Home_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [_menuBuildGridsection(), _buildCarouselSection()],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // ======== menu waktu sholat by lokasi ========
+              _buildHeroSection(),
+              // ======== menu waktu sholat by lokasi done ========
+              // ======== menu section ========
+              _menuBuildGridsection(),
+              // ======== menu section done ========
+              // ======== carousel section ========
+              _buildCarouselSection(),
+              // ======== carousel section done========
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildMenuItem(String iconPath, String title, String rootName) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+  // ======== widget menu item ========
+  Widget _buildMenuItem(String iconPath, String title, String routetName) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, routetName);
+        },
+        borderRadius: BorderRadius.circular(12),
+        splashColor: Colors.amber.withOpacity(0.2),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(iconPath, width: 40),
+              const SizedBox(height: 6),
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'monserrat',
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  // ======== widget _buildHeroSection / jadwal sholat by lokasi ========
+  Widget _buildHeroSection() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.amber,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(iconPath, width: 40),
-            const SizedBox(height: 6),
             Text(
-              title,
+              "Assalamualaikum",
+              style: TextStyle(fontFamily: 'montserrat', fontSize: 16),
+            ),
+            Text(
+              "Ngargoyoso",
               style: TextStyle(
-                fontFamily: 'monserrat',
-                fontWeight: FontWeight.w700,
-                fontSize: 13,
+                fontFamily: 'montserrat',
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+            Text(
+              DateFormat('HH:MM').format(DateTime.now()),
+              style: TextStyle(
+                fontFamily: 'montserrat',
+                fontSize: 50,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ],
@@ -101,7 +163,7 @@ class _Home_PageState extends State<Home_Page> {
             'Zakat',
             '/transfer_zakat',
           ),
-          _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa', '/doa'),
+          _buildMenuItem('assets/images/ic_menu_doa.png', 'Khutbah', '/doa'),
         ],
       ),
     );
