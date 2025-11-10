@@ -66,7 +66,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   fonts:
-    - family: montserrat-reg
+    - family: montserrat
       fonts:
         - asset: assets/fonts/Montserrat-Regular.ttf
         - asset: assets/fonts/Montserrat-bold.ttf

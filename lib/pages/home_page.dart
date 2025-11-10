@@ -39,7 +39,34 @@ class _Home_PageState extends State<Home_Page> {
   }
 
   Widget _buildMenuItem(String iconPath, String title, String rootName) {
-    return Column(children: [Image.asset(iconPath, width: 35), Text(title)]);
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(iconPath, width: 35),
+          const SizedBox(height: 6),
+          Text(
+            title,
+            style: TextStyle(
+              fontFamily: 'monserrat',
+              fontWeight: FontWeight.w700,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _menuBuildGridsection() {
@@ -53,18 +80,18 @@ class _Home_PageState extends State<Home_Page> {
           _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa Harian', '/doa'),
           _buildMenuItem(
             'assets/images/ic_menu_jadwal_sholat.png',
-            'Doa Harian',
-            '/doa',
+            'Jadwal Sholat',
+            '/jadwal_sholat',
           ),
           _buildMenuItem(
             'assets/images/ic_menu_video_kajian.png',
-            'Doa Harian',
-            '/doa',
+            'Video Kajian',
+            '/video_kajian',
           ),
           _buildMenuItem(
             'assets/images/ic_menu_zakat.png',
             'Transaksi Zakat',
-            '/doa',
+            '/transfer_zakat',
           ),
         ],
       ),
