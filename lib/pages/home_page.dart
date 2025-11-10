@@ -97,43 +97,62 @@ class _Home_PageState extends State<Home_Page> {
 
   // ======== widget _buildHeroSection / jadwal sholat by lokasi ========
   Widget _buildHeroSection() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.amber,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          height: 220,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Color(0xFFB3E5FC),
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+            image: DecorationImage(
+              image: AssetImage('assets/images/bg_header_dashboard_night.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Assalamualaikum",
+                  style: TextStyle(
+                    fontFamily: 'montserrat',
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  "Ngargoyoso",
+                  style: TextStyle(
+                    height: 1.0,
+                    fontFamily: 'montserrat',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  DateFormat('HH:MM').format(DateTime.now()),
+                  style: TextStyle(
+                    height: 1.0,
+                    fontFamily: 'montserrat',
+                    fontSize: 50,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Assalamualaikum",
-              style: TextStyle(fontFamily: 'montserrat', fontSize: 16),
-            ),
-            Text(
-              "Ngargoyoso",
-              style: TextStyle(
-                fontFamily: 'montserrat',
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
-            ),
-            Text(
-              DateFormat('HH:MM').format(DateTime.now()),
-              style: TextStyle(
-                fontFamily: 'montserrat',
-                fontSize: 50,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 
