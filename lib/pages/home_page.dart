@@ -39,32 +39,35 @@ class _Home_PageState extends State<Home_Page> {
   }
 
   Widget _buildMenuItem(String iconPath, String title, String rootName) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(iconPath, width: 35),
-          const SizedBox(height: 6),
-          Text(
-            title,
-            style: TextStyle(
-              fontFamily: 'monserrat',
-              fontWeight: FontWeight.w700,
-              fontSize: 13,
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(iconPath, width: 35),
+            const SizedBox(height: 6),
+            Text(
+              title,
+              style: TextStyle(
+                fontFamily: 'monserrat',
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
