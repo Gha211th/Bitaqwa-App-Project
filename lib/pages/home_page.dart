@@ -21,6 +21,9 @@ class _Home_PageState extends State<Home_Page> {
   final CarouselController _controller = CarouselController();
   int _currentIndex = 0;
 
+  final doa_btn = "assets/images/ic_menu_doa.png";
+  final sholat_btn = 'assets/images/ic_menu_jadwal_sholat.png';
+
   final posterList = const <String>[
     'assets/images/ramadan.jpg',
     'assets/images/idul_adha.jpg',
@@ -56,7 +59,7 @@ class _Home_PageState extends State<Home_Page> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(iconPath, width: 35),
+            Image.asset(iconPath, width: 40),
             const SizedBox(height: 6),
             Text(
               title,
@@ -74,28 +77,31 @@ class _Home_PageState extends State<Home_Page> {
 
   Widget _menuBuildGridsection() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(10.0),
       child: GridView.count(
         crossAxisCount: 4,
         shrinkWrap: true,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa Harian', '/doa'),
+          _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa', '/doa'),
           _buildMenuItem(
             'assets/images/ic_menu_jadwal_sholat.png',
-            'Jadwal Sholat',
+            'Sholat',
             '/jadwal_sholat',
           ),
           _buildMenuItem(
             'assets/images/ic_menu_video_kajian.png',
-            'Video Kajian',
+            'Kajian',
             '/video_kajian',
           ),
           _buildMenuItem(
             'assets/images/ic_menu_zakat.png',
-            'Transaksi Zakat',
+            'Zakat',
             '/transfer_zakat',
           ),
+          _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa', '/doa'),
         ],
       ),
     );
