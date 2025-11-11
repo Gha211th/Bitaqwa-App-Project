@@ -150,26 +150,40 @@ class _Home_PageState extends State<Home_Page> {
           ),
         ),
         // ======== waktu sholat selanjutnya
-        Column(
-          children: [
-            Text(
-              "Waktu sholat berikutnya",
-              style: TextStyle(
-                fontFamily: 'poppins',
-                fontSize: 14,
-                color: Colors.grey,
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                "Waktu sholat berikutnya",
+                style: TextStyle(
+                  fontFamily: 'poppins',
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
               ),
-            ),
-            Text(
-              'ASHAR',
-              style: TextStyle(
-                fontFamily: 'poppinsBold',
-                fontSize: 20,
-                color: Colors.amber,
+              Text(
+                'ASHAR',
+                style: TextStyle(
+                  fontFamily: 'poppinsBold',
+                  fontSize: 20,
+                  color: Colors.amber,
+                ),
               ),
-            ),
-            Text("5 jam 10 menit", style: TextStyle(fontFamily: 'poppinsReg')),
-          ],
+              Text(
+                "14:30",
+                style: TextStyle(fontFamily: 'poppinsReg', color: Colors.blue),
+              ),
+              Text(
+                "5 jam 10 menit",
+                style: TextStyle(fontFamily: 'poppinsReg'),
+              ),
+            ],
+          ),
         ),
       ],
     );
