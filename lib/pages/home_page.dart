@@ -20,6 +20,13 @@ class Home_Page extends StatefulWidget {
 class _Home_PageState extends State<Home_Page> {
   final CarouselController _controller = CarouselController();
   int _currentIndex = 0;
+  bool _isLoading = true;
+  Duration? _timeRemaining;
+  Timer? _countDownTimer;
+  String _Location = "mengambil lokasi";
+  String _prayTime = "loading...";
+  String _backGroundImage = "assets/images/morning.jpg";
+  List<dynamic>? _jadwalSholat;
 
   final doa_btn = "assets/images/ic_menu_doa.png";
   final sholat_btn = 'assets/images/ic_menu_jadwal_sholat.png';
@@ -30,6 +37,27 @@ class _Home_PageState extends State<Home_Page> {
     'assets/images/idul_fitri.jpg',
   ];
 
+  // fungsi teks remaining waktu sholat
+  String _formatDuration(Duration d) {
+    final hours = d.inHours;
+    final minute = d.inMinutes.remainder(60);
+    return "$hours jam $minute menit lagi";
+  }
+
+  // state untuk dijalankan diawal
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future _getBackgroundImage(DateTime now) async {
+    if (now.hour < 12) {
+      return 'assets/images/morning.jpg';
+    } else if (now.hour < 18) {
+      return 'assets/images/evening.jpg';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +67,7 @@ class _Home_PageState extends State<Home_Page> {
             children: [
               // ======== menu waktu sholat by lokasi ========
               _buildHeroSection(),
-              const SizedBox(height: 70),
+              const SizedBox(height: 75),
               // ======== menu waktu sholat by lokasi done ========
               // ======== menu section ========
               _menuBuildGridsection(),
@@ -70,7 +98,7 @@ class _Home_PageState extends State<Home_Page> {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withOpacity(0.5),
                 blurRadius: 4,
                 offset: const Offset(0, 2),
               ),
@@ -103,7 +131,7 @@ class _Home_PageState extends State<Home_Page> {
       children: [
         Container(
           width: double.infinity,
-          height: 250,
+          height: 210,
           decoration: BoxDecoration(
             color: Color(0xFFB3E5FC),
             borderRadius: BorderRadius.only(
@@ -153,7 +181,7 @@ class _Home_PageState extends State<Home_Page> {
         ),
         // ======== waktu sholat selanjutnya
         Positioned(
-          bottom: -100,
+          bottom: -75,
           left: 20,
           right: 20,
           child: Container(
@@ -209,7 +237,7 @@ class _Home_PageState extends State<Home_Page> {
 
   Widget _menuBuildGridsection() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(13.0),
       child: GridView.count(
         crossAxisCount: 4,
         shrinkWrap: true,
