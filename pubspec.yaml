@@ -71,7 +71,12 @@ flutter:
         - asset: assets/fonts/Montserrat-Regular.ttf
         - asset: assets/fonts/Montserrat-bold.ttf
         - asset: assets/fonts/Montserrat-Medium.ttf
-
+    - family: poppinsReg
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+    - family: poppinsBold
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/

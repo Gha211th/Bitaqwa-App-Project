@@ -101,7 +101,6 @@ class _Home_PageState extends State<Home_Page> {
       clipBehavior: Clip.none,
       children: [
         Container(
-          height: 220,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Color(0xFFB3E5FC),
@@ -122,18 +121,17 @@ class _Home_PageState extends State<Home_Page> {
                 Text(
                   "Assalamualaikum",
                   style: TextStyle(
-                    fontFamily: 'montserrat',
+                    fontFamily: 'poppinsReg',
                     fontSize: 16,
                     color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   "Ngargoyoso",
                   style: TextStyle(
-                    height: 1.0,
-                    fontFamily: 'montserrat',
-                    fontWeight: FontWeight.w500,
+                    fontFamily: 'poppinsBold',
+                    fontWeight: FontWeight.w600,
                     fontSize: 22,
                     color: Colors.white,
                   ),
@@ -141,16 +139,37 @@ class _Home_PageState extends State<Home_Page> {
                 Text(
                   DateFormat('HH:MM').format(DateTime.now()),
                   style: TextStyle(
-                    height: 1.0,
-                    fontFamily: 'montserrat',
+                    fontFamily: 'poppinsBold',
                     fontSize: 50,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white,
                   ),
                 ),
               ],
             ),
           ),
+        ),
+        // ======== waktu sholat selanjutnya
+        Column(
+          children: [
+            Text(
+              "Waktu sholat berikutnya",
+              style: TextStyle(
+                fontFamily: 'poppins',
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            Text(
+              'ASHAR',
+              style: TextStyle(
+                fontFamily: 'poppinsBold',
+                fontSize: 20,
+                color: Colors.amber,
+              ),
+            ),
+            Text("5 jam 10 menit", style: TextStyle(fontFamily: 'poppinsReg')),
+          ],
         ),
       ],
     );
