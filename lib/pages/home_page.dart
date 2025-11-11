@@ -39,6 +39,7 @@ class _Home_PageState extends State<Home_Page> {
             children: [
               // ======== menu waktu sholat by lokasi ========
               _buildHeroSection(),
+              const SizedBox(height: 70),
               // ======== menu waktu sholat by lokasi done ========
               // ======== menu section ========
               _menuBuildGridsection(),
@@ -102,6 +103,7 @@ class _Home_PageState extends State<Home_Page> {
       children: [
         Container(
           width: double.infinity,
+          height: 250,
           decoration: BoxDecoration(
             color: Color(0xFFB3E5FC),
             borderRadius: BorderRadius.only(
@@ -109,7 +111,7 @@ class _Home_PageState extends State<Home_Page> {
               bottomRight: Radius.circular(30),
             ),
             image: DecorationImage(
-              image: AssetImage('assets/images/bg_header_dashboard_night.png'),
+              image: AssetImage('assets/images/morning.jpg'),
               fit: BoxFit.cover,
             ),
           ),
@@ -150,39 +152,55 @@ class _Home_PageState extends State<Home_Page> {
           ),
         ),
         // ======== waktu sholat selanjutnya
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(
-                "Waktu sholat berikutnya",
-                style: TextStyle(
-                  fontFamily: 'poppins',
-                  fontSize: 14,
-                  color: Colors.black,
+        Positioned(
+          bottom: -100,
+          left: 20,
+          right: 20,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 2,
+                  offset: Offset(0, 4),
+                  color: Colors.black.withOpacity(0.4),
                 ),
-              ),
-              Text(
-                'ASHAR',
-                style: TextStyle(
-                  fontFamily: 'poppinsBold',
-                  fontSize: 20,
-                  color: Colors.amber,
+              ],
+            ),
+            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
+            child: Column(
+              children: [
+                Text(
+                  "Waktu sholat berikutnya",
+                  style: TextStyle(
+                    fontFamily: 'poppinsReg',
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              Text(
-                "14:30",
-                style: TextStyle(fontFamily: 'poppinsReg', color: Colors.blue),
-              ),
-              Text(
-                "5 jam 10 menit",
-                style: TextStyle(fontFamily: 'poppinsReg'),
-              ),
-            ],
+                Text(
+                  'ASHAR',
+                  style: TextStyle(
+                    fontFamily: 'poppinsBold',
+                    fontSize: 20,
+                    color: Colors.amber,
+                  ),
+                ),
+                Text(
+                  "14:30",
+                  style: TextStyle(
+                    fontFamily: 'poppinsBold',
+                    fontSize: 28,
+                    color: Colors.black38,
+                  ),
+                ),
+                Text(
+                  "5 jam 10 menit",
+                  style: TextStyle(fontFamily: 'poppinsReg'),
+                ),
+              ],
+            ),
           ),
         ),
       ],
