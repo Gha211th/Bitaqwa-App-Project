@@ -48,14 +48,19 @@ class _Home_PageState extends State<Home_Page> {
   @override
   void initState() {
     super.initState();
+    _updatePrayerTime();
   }
 
-  Future _getBackgroundImage(DateTime now) async {
+  Future<void> _updatePrayerTime() async {}
+
+  String _getBackgroundImage(DateTime now) {
     if (now.hour < 12) {
       return 'assets/images/morning.jpg';
     } else if (now.hour < 18) {
       return 'assets/images/evening.jpg';
     }
+
+    return 'assets/images/evening.jpg';
   }
 
   @override
@@ -139,7 +144,7 @@ class _Home_PageState extends State<Home_Page> {
               bottomRight: Radius.circular(30),
             ),
             image: DecorationImage(
-              image: AssetImage('assets/images/morning.jpg'),
+              image: AssetImage(_backGroundImage),
               fit: BoxFit.cover,
             ),
           ),
