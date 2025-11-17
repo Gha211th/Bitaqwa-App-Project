@@ -1,44 +1,41 @@
+import 'dart:async'; // timer countdown
 import 'package:flutter/material.dart';
-import 'dart:async'; // Times coutdown
 import 'package:carousel_slider/carousel_slider.dart'; // carousel slider
-import 'package:geolocator/geolocator.dart'; // gps
-import 'package:geocoding/geocoding.dart';
-import 'package:permission_handler/permission_handler.dart'; //izin handler
-import 'package:intl/intl.dart'; // formater number
-import 'package:shared_preferences/shared_preferences.dart'; // cache local
-import 'package:http/http.dart' as http; //ambil data API json
-import 'package:string_similarity/string_similarity.dart'; //fuzzy match string
-import 'dart:convert'; //decode json
+import 'package:http/http.dart' as http; // ambil data API JSON
+import 'dart:convert'; // decode JSON
+import 'package:geolocator/geolocator.dart'; // GPS
+import 'package:geocoding/geocoding.dart'; // Konversi GPS
+import 'package:intl/intl.dart'; // Formatter Number
+import 'package:permission_handler/permission_handler.dart'; // Izin handler
+import 'package:shared_preferences/shared_preferences.dart'; // cache lokal
+import 'package:string_similarity/string_similarity.dart'; // fuzzy match string
 
-class Home_Page extends StatefulWidget {
-  const Home_Page({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<Home_Page> createState() => _Home_PageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _Home_PageState extends State<Home_Page> {
+class _HomePageState extends State<HomePage> {
   final CarouselController _controller = CarouselController();
   int _currentIndex = 0;
   bool _isLoading = true;
   Duration? _timeRemaining;
-  Timer? _countDownTimer;
-  String _location = "mengambil lokasi";
-  String _prayTime = "loading...";
-  String _prayername = "loading...";
-  String _backGroundImage = "assets/images/morning.jpg";
+  Timer? _countdownTimer;
+  String _location = "Mengambil lokasi....";
+  String _prayerTime = "Loading...";
+  String _prayerName = "Loading...";
+  String _backgroundImage = 'assets/images/bg_morning.png';
   List<dynamic>? _jadwalSholat;
 
-  final doa_btn = "assets/images/ic_menu_doa.png";
-  final sholat_btn = 'assets/images/ic_menu_jadwal_sholat.png';
-
   final posterList = const <String>[
-    'assets/images/ramadan.jpg',
-    'assets/images/idul_adha.jpg',
-    'assets/images/idul_fitri.jpg',
+    'assets/images/ramadhan-kareem.png',
+    'assets/images/idl-fitr.png',
+    'assets/images/idl-adh.png',
   ];
 
-  // fungsi teks remaining waktu sholat
+  //fungsi teks remaining waktu sholat
   String _formatDuration(Duration d) {
     final hours = d.inHours;
     final minute = d.inMinutes.remainder(60);
@@ -108,7 +105,7 @@ class _Home_PageState extends State<Home_Page> {
         setState(() {
           _location =
               "${place.subAdministrativeArea ?? ''}, ${place.locality ?? ''}";
-          _backGroundImage = _getBackgroundImage(DateTime.now());
+          _backgroundImage = _getBackgroundImage(DateTime.now());
           _isLoading = false;
         });
       } catch (e) {
@@ -252,16 +249,16 @@ class _Home_PageState extends State<Home_Page> {
     });
 
     setState(() {
-      _prayername = nextPrayer;
+      _prayerName = nextPrayer;
       _timeRemaining = closest;
-      _prayTime = closest != null
+      _prayerTime = closest != null
           ? DateFormat('HH:mm').format(prayers[nextPrayer]!)
           : "N/A";
     });
 
     // Timer countdown
-    _countDownTimer?.cancel();
-    _countDownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _countdownTimer?.cancel();
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       final remaining = prayers[nextPrayer]!.difference(DateTime.now());
       if (remaining.isNegative) {
         timer.cancel();
@@ -309,16 +306,14 @@ class _Home_PageState extends State<Home_Page> {
     );
   }
 
-  Future<void> _updatePrayerTime() async {}
-
   String _getBackgroundImage(DateTime now) {
     if (now.hour < 12) {
-      return 'assets/images/morning.jpg';
+      return 'assets/images/morning.png';
     } else if (now.hour < 18) {
-      return 'assets/images/evening.jpg';
+      return 'assets/images/afternoon.png';
     }
 
-    return 'assets/images/evening.jpg';
+    return 'assets/images/night.png';
   }
 
   @override
@@ -327,17 +322,21 @@ class _Home_PageState extends State<Home_Page> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            children: [
-              // ======== menu waktu sholat by lokasi ========
+            children: <Widget>[
+              // =============================
+              // [MENU WAKTU SHOLAT BY LOKASI]
+              // =============================
               _buildHeroSection(),
-              const SizedBox(height: 75),
-              // ======== menu waktu sholat by lokasi done ========
-              // ======== menu section ========
-              _menuBuildGridsection(),
-              // ======== menu section done ========
-              // ======== carousel section ========
+              const SizedBox(height: 65),
+              // =============================
+              // [MENU SECTION]
+              // =============================
+              _buildMenuGridSection(),
+
+              // =============================
+              // [CAROUSEL SECTION]
+              // =============================
               _buildCarouselSection(),
-              // ======== carousel section done========
             ],
           ),
         ),
@@ -345,64 +344,24 @@ class _Home_PageState extends State<Home_Page> {
     );
   }
 
-  // ======== widget menu item ========
-  Widget _buildMenuItem(String iconPath, String title, String routetName) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, routetName);
-        },
-        borderRadius: BorderRadius.circular(12),
-        splashColor: Colors.amber.withOpacity(0.2),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(iconPath, width: 40),
-              const SizedBox(height: 6),
-              Text(
-                title,
-                style: TextStyle(
-                  fontFamily: 'monserrat',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ======== widget _buildHeroSection / jadwal sholat by lokasi ========
+  // =============================
+  // [MENU HERO WIDGET]
+  // =============================
   Widget _buildHeroSection() {
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
           width: double.infinity,
-          height: 210,
+          height: 290,
           decoration: BoxDecoration(
             color: Color(0xFFB3E5FC),
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30),
               bottomRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30),
             ),
             image: DecorationImage(
-              image: AssetImage(_backGroundImage),
+              image: AssetImage(_backgroundImage),
               fit: BoxFit.cover,
             ),
           ),
@@ -410,31 +369,30 @@ class _Home_PageState extends State<Home_Page> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
                 Text(
-                  "Assalamualaikum",
+                  'Assalamu\'alaikum',
                   style: TextStyle(
-                    fontFamily: 'poppinsReg',
+                    fontFamily: 'PoppinsRegular',
+                    color: Colors.white70,
                     fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  "Ngargoyoso",
+                  _location,
                   style: TextStyle(
-                    fontFamily: 'poppinsBold',
-                    fontWeight: FontWeight.w600,
+                    fontFamily: 'PoppinsSemiBold',
                     fontSize: 22,
                     color: Colors.white,
                   ),
                 ),
                 Text(
-                  DateFormat('HH:MM').format(DateTime.now()),
+                  DateFormat('HH:mm').format(DateTime.now()),
                   style: TextStyle(
-                    fontFamily: 'poppinsBold',
+                    fontFamily: 'PoppinsBold',
                     fontSize: 50,
-                    fontWeight: FontWeight.w700,
+                    height: 1.2,
                     color: Colors.white,
                   ),
                 ),
@@ -442,9 +400,10 @@ class _Home_PageState extends State<Home_Page> {
             ),
           ),
         ),
-        // ======== waktu sholat selanjutnya
+
+        // ========= WAKTU SHOLAT SELANJUTNYA =========
         Positioned(
-          bottom: -75,
+          bottom: -55,
           left: 20,
           right: 20,
           child: Container(
@@ -455,7 +414,7 @@ class _Home_PageState extends State<Home_Page> {
                 BoxShadow(
                   blurRadius: 2,
                   offset: Offset(0, 4),
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.amber.withOpacity(0.4),
                 ),
               ],
             ),
@@ -463,32 +422,36 @@ class _Home_PageState extends State<Home_Page> {
             child: Column(
               children: [
                 Text(
-                  "Waktu sholat berikutnya",
+                  'Waktu Sholat Berikutnya..',
                   style: TextStyle(
-                    fontFamily: 'poppinsReg',
+                    fontFamily: 'PoppinsRegular',
                     fontSize: 14,
-                    color: Colors.black,
+                    color: Colors.grey,
                   ),
                 ),
                 Text(
                   'ASHAR',
                   style: TextStyle(
-                    fontFamily: 'poppinsBold',
+                    fontFamily: 'PoppinsBold',
                     fontSize: 20,
                     color: Colors.amber,
                   ),
                 ),
                 Text(
-                  "14:30",
+                  '14:22',
                   style: TextStyle(
-                    fontFamily: 'poppinsBold',
+                    fontFamily: 'PoppinsBold',
                     fontSize: 28,
                     color: Colors.black38,
                   ),
                 ),
                 Text(
-                  "5 jam 10 menit",
-                  style: TextStyle(fontFamily: 'poppinsReg'),
+                  '5 Jam 10 Menit',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 13,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
@@ -498,51 +461,101 @@ class _Home_PageState extends State<Home_Page> {
     );
   }
 
-  Widget _menuBuildGridsection() {
+  // =============================
+  // [MENU ITEM WIDGET]
+  // =============================
+  Widget _buildMenuItem(String iconPath, String title, String routeName) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, routeName);
+        },
+        borderRadius: BorderRadius.circular(12),
+        splashColor: Colors.amber.withOpacity(0.2),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(iconPath, width: 35),
+              const SizedBox(height: 6),
+              Text(
+                title,
+                style: TextStyle(fontFamily: 'PoppinsRegular', fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // =============================
+  // [MENU GRID SECTION WIDGET]
+  // =============================
+  Widget _buildMenuGridSection() {
     return Padding(
-      padding: const EdgeInsets.all(13.0),
+      padding: const EdgeInsets.all(8.0),
       child: GridView.count(
-        crossAxisCount: 4,
+        crossAxisCount: 4, // max 4 baris
         shrinkWrap: true,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa', '/doa'),
+          _buildMenuItem(
+            'assets/images/ic_menu_doa.png', // iconPath
+            'Doa', // title
+            '/doa',
+          ), //routeName
           _buildMenuItem(
             'assets/images/ic_menu_jadwal_sholat.png',
             'Sholat',
-            '/jadwal_sholat',
+            '/doa',
           ),
           _buildMenuItem(
             'assets/images/ic_menu_video_kajian.png',
             'Kajian',
-            '/video_kajian',
+            '/doa',
           ),
+          _buildMenuItem('assets/images/ic_menu_zakat.png', 'Zakat', '/doa'),
           _buildMenuItem(
-            'assets/images/ic_menu_zakat.png',
-            'Zakat',
-            '/transfer_zakat',
+            'assets/images/ic_menu_jadwal_sholat.png', // iconPath
+            'Khutbah', // title
+            '/doa',
           ),
-          _buildMenuItem('assets/images/ic_menu_doa.png', 'Khutbah', '/doa'),
         ],
       ),
     );
   }
 
-  // ============== widget carousel section ================
+  // =============================
+  // [CAROUSEL SECTION WIDGET]
+  // =============================
   Widget _buildCarouselSection() {
     return Column(
       children: [
-        SizedBox(height: 10),
+        const SizedBox(height: 20),
+        // CAROUSEL CARD
         CarouselSlider.builder(
           itemCount: posterList.length,
-          itemBuilder: (context, Index, realIndex) {
-            final poster = posterList[Index];
+          itemBuilder: (context, index, realIndex) {
+            final poster = posterList[index];
             return Container(
-              margin: EdgeInsets.all(20),
+              margin: EdgeInsets.all(15),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadiusGeometry.circular(20),
                 child: Image.asset(
                   poster,
                   width: double.infinity,
@@ -553,7 +566,7 @@ class _Home_PageState extends State<Home_Page> {
           },
           options: CarouselOptions(
             autoPlay: true,
-            height: 350,
+            height: 270,
             enlargeCenterPage: true,
             viewportFraction: 0.7,
             onPageChanged: (index, reason) {
@@ -561,7 +574,8 @@ class _Home_PageState extends State<Home_Page> {
             },
           ),
         ),
-        // DOT INDIKATOR
+
+        // DOT INDIKATOR CAROUSEL
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: posterList.asMap().entries.map((entry) {
@@ -570,12 +584,12 @@ class _Home_PageState extends State<Home_Page> {
               child: Container(
                 width: 10,
                 height: 10,
-                margin: EdgeInsets.all(5),
+                margin: EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  color: _currentIndex == entry.key
-                      ? Colors.yellow[300]
-                      : Colors.grey,
                   shape: BoxShape.circle,
+                  color: _currentIndex == entry.key
+                      ? Colors.amber
+                      : Colors.grey[400],
                 ),
               ),
             );
