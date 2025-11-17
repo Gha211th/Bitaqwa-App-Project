@@ -97,7 +97,7 @@ class _ZakatPageState extends State<ZakatPage> {
       final goldRes = await http.get(
         Uri.parse('https://www.goldapi.io/api/XAU/USD'),
         headers: {
-          'x-access-token': 'goldapi-1wwsrsmhk0ch86-io',
+          'x-access-token': 'goldapi-ea11r3smhk7z6q0-io',
           'Content-Type': 'application/json',
         },
       );
