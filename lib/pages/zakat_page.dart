@@ -3,6 +3,16 @@
 // berdasarkan harga emas dunia (GoldAPI) & kurs USD/IDR (OpenERAPI)
 // ================================================================
 
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/formatters/currency_input_formatter.dart';
+import 'package:flutter_multi_formatter/formatters/formatter_utils.dart';
+import 'package:flutter_multi_formatter/formatters/money_input_enums.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 /// 🔷 Kelas utama halaman zakat
 /// Mewarisi `StatefulWidget` agar bisa memperbarui UI secara dinamis
 class ZakatPage extends StatefulWidget {
