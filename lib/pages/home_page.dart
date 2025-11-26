@@ -18,49 +18,56 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // ------------------------------------------------------------
+  // [3] VARIABEL STATE & KONTROL
+  // ------------------------------------------------------------
   final CarouselController _controller = CarouselController();
   int _currentIndex = 0;
   bool _isLoading = true;
   Duration? _timeRemaining;
   Timer? _countdownTimer;
-  String _location = "Mengambil lokasi....";
-  String _prayerTime = "Loading...";
-  String _prayerName = "Loading...";
-  String _backgroundImage = 'assets/images/bg_morning.png';
-  List<dynamic>? _jadwalSholat;
 
-  final posterList = const <String>[
+  // Fungsi bantu: ubah Duration jadi teks ramah
+  String _formatDuration(Duration d) {
+    final hours = d.inHours;
+    final minutes = d.inMinutes.remainder(60);
+    return "$hours jam $minutes menit lagi";
+  }
+
+  // Gambar banner carousel
+  final List<String> posterList = const [
     'assets/images/ramadhan-kareem.png',
     'assets/images/idl-fitr.png',
     'assets/images/idl-adh.png',
   ];
 
-  //fungsi teks remaining waktu sholat
-  String _formatDuration(Duration d) {
-    final hours = d.inHours;
-    final minute = d.inMinutes.remainder(60);
-    return "$hours jam $minute menit lagi";
-  }
+  // Variabel utama UI
+  String _location = "Mengambil lokasi...";
+  String _prayerName = "Loading...";
+  String _prayerTime = "Loading...";
+  String _backgroundImage = 'assets/images/bg_morning.png';
+  List<dynamic>? _jadwalSholat;
 
-  // state untuk dijalankan diawal
   @override
   void initState() {
     super.initState();
-    _updatePrayerTimes();
+    _updatePrayerTimes(); // jalankan saat awal
   }
 
   // ================================================================
-  // LOGIKA INTI: UPDATE DATA WAKTU SHOLAT & LOKASI
+  // [4] LOGIKA INTI: UPDATE DATA WAKTU SHOLAT & LOKASI
   // ================================================================
   /// 🔹 Mengambil lokasi, mendeteksi kota terdekat, dan memuat jadwal sholat
   ///
   /// Diagram alur:
   ///
   ///  [GPS Position]
+  ///       ↓
   ///  [Kota terdekat (fuzzy match)]
+  ///       ↓
   ///  [Ambil data GitHub jadwal sholat]
+  ///       ↓
   ///  [Hitung waktu sholat terdekat + countdown]
-
   Future<void> _updatePrayerTimes() async {
     setState(() => _isLoading = true);
 
@@ -121,7 +128,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ================================================================
-  // API CALL: AMBIL DATA JADWAL SHOLAT DARI GITHUB
+  // [5] API CALL: AMBIL DATA JADWAL SHOLAT DARI GITHUB
   // ================================================================
   /// 🔹 Mengambil data JSON jadwal sholat berdasarkan kota, bulan, dan tahun.
   /// 🔹 Data disimpan ke cache agar bisa diakses offline.
@@ -163,7 +170,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ================================================================
-  // LOGIKA FUZZY MATCH: DETEKSI KOTA TERDEKAT
+  // [6] LOGIKA FUZZY MATCH: DETEKSI KOTA TERDEKAT
   // ================================================================
   /// 🔹 Mencocokkan nama kota pengguna dengan daftar kota dari GitHub.
   ///
@@ -205,7 +212,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ================================================================
-  // PERHITUNGAN: WAKTU SHOLAT BERIKUTNYA & COUNTDOWN
+  // [7] PERHITUNGAN: WAKTU SHOLAT BERIKUTNYA & COUNTDOWN
   // ================================================================
   /// 🔹 Menghitung waktu sholat berikutnya berdasarkan jadwal hari ini.
   /// 🔹 Menampilkan countdown waktu tersisa.
@@ -270,7 +277,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ================================================================
-  // PERMINTAAN IZIN AKSES LOKASI
+  // [8] PERMINTAAN IZIN AKSES LOKASI
   // ================================================================
   /// 🔹 Meminta izin lokasi dari pengguna.
   Future<bool> _requestLocationPermission() async {
@@ -287,7 +294,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   // ================================================================
-  // DIALOG ERROR
+  // [9] PEMILIH BACKGROUND SESUAI WAKTU
+  // ================================================================
+  /// 🔹 Menentukan gambar background pagi / siang / malam.
+  String _getBackgroundImage(DateTime now) {
+    if (now.hour < 12) return 'assets/images/bg_morning.png';
+    if (now.hour < 18) return 'assets/images/bg_afternoon.png';
+    return 'assets/images/bg_night.png';
+  }
+
+  // ================================================================
+  // [10] DIALOG ERROR
   // ================================================================
   /// 🔹 Menampilkan dialog jika terjadi kesalahan (mis. gagal lokasi).
   void _showErrorDialog(String msg) {
@@ -306,63 +323,75 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  String _getBackgroundImage(DateTime now) {
-    if (now.hour < 12) {
-      return 'assets/images/morning.png';
-    } else if (now.hour < 18) {
-      return 'assets/images/afternoon.png';
-    }
-
-    return 'assets/images/night.png';
-  }
-
+  // ================================================================
+  // [11] BUILD UI: STRUKTUR UTAMA
+  // ================================================================
+  /// 🔹 Struktur tampilan utama dari atas ke bawah:
+  ///
+  ///  ┌─--------──────────────┐
+  ///  │ Header (Lokasi, Jam)  │
+  ///  │ Card Countdown Sholat │
+  ///  │ Menu Grid 4 item      │
+  ///  │ Jadwal Sholat (Expand)│
+  ///  │ Carousel Banner       │
+  ///  └───────────────--------┘
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              // =============================
-              // [MENU WAKTU SHOLAT BY LOKASI]
-              // =============================
-              _buildHeroSection(),
-              const SizedBox(height: 65),
-              // =============================
-              // [MENU SECTION]
-              // =============================
-              _buildMenuGridSection(),
-
-              // =============================
-              // [CAROUSEL SECTION]
-              // =============================
-              _buildCarouselSection(),
-            ],
-          ),
-        ),
-      ),
+      backgroundColor: Colors.grey[100],
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator(color: Colors.amber))
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildHeaderSection(),
+                    const SizedBox(height: 80),
+                    _buildMenuGrid(),
+                    if (_jadwalSholat != null) _buildPrayerExpansion(),
+                    _buildCarouselSection(),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 
-  // =============================
-  // [MENU HERO WIDGET]
-  // =============================
-  Widget _buildHeroSection() {
+  // ================================================================
+  // [12] BAGIAN HEADER & KARTU INFO WAKTU SHOLAT
+  // ================================================================
+  /// 🔹 Bagian ini menampilkan:
+  ///   - Sapaan “Assalamu’alaikum”
+  ///   - Nama lokasi & jam saat ini
+  ///   - Kartu berisi waktu sholat berikutnya + countdown
+  ///
+  ///  ┌─────────────────────────────────────┐
+  ///  │ 🌤  Background Langit               │
+  ///  │ ┌───────────────────────────────┐  │
+  ///  │ │ Assalamu’alaikum              │  │
+  ///  │ │ Karanganyar, Jawa Tengah      │  │
+  ///  │ │ 05:32                         │  │
+  ///  │ └───────────────────────────────┘  │
+  ///  │     ↓                             │
+  ///  │  📅 Card “Waktu Sholat Berikutnya” │
+  ///  └─────────────────────────────────────┘
+  Widget _buildHeaderSection() {
     return Stack(
       clipBehavior: Clip.none,
       children: [
+        // [12.1] 🌅 Background Langit
         Container(
           width: double.infinity,
           height: 290,
           decoration: BoxDecoration(
-            color: Color(0xFFB3E5FC),
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(30),
-              bottomLeft: Radius.circular(30),
-            ),
+            color: const Color(0xFFB3E5FC),
             image: DecorationImage(
               image: AssetImage(_backgroundImage),
               fit: BoxFit.cover,
+            ),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
             ),
           ),
           child: Padding(
@@ -370,9 +399,9 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Assalamu\'alaikum',
+              children: [
+                const Text(
+                  "Assalamu’alaikum",
                   style: TextStyle(
                     fontFamily: 'PoppinsRegular',
                     color: Colors.white70,
@@ -381,19 +410,19 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Text(
                   _location,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'PoppinsSemiBold',
-                    fontSize: 22,
                     color: Colors.white,
+                    fontSize: 22,
                   ),
                 ),
                 Text(
                   DateFormat('HH:mm').format(DateTime.now()),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'PoppinsBold',
                     fontSize: 50,
-                    height: 1.2,
                     color: Colors.white,
+                    height: 1.2,
                   ),
                 ),
               ],
@@ -401,9 +430,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
 
-        // ========= WAKTU SHOLAT SELANJUTNYA =========
+        // [12.2] 🕋 Card “Waktu Sholat Berikutnya”
         Positioned(
-          bottom: -55,
+          bottom: -75,
           left: 20,
           right: 20,
           child: Container(
@@ -412,47 +441,49 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  blurRadius: 2,
-                  offset: Offset(0, 4),
-                  color: Colors.amber.withOpacity(0.4),
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
+            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
             child: Column(
               children: [
-                Text(
-                  'Waktu Sholat Berikutnya..',
+                const Text(
+                  "Waktu Sholat Berikutnya",
                   style: TextStyle(
                     fontFamily: 'PoppinsRegular',
                     fontSize: 14,
                     color: Colors.grey,
                   ),
                 ),
+                const SizedBox(height: 6),
                 Text(
-                  'ASHAR',
-                  style: TextStyle(
+                  _prayerName,
+                  style: const TextStyle(
                     fontFamily: 'PoppinsBold',
                     fontSize: 20,
-                    color: Colors.amber,
+                    color: Colors.orange,
                   ),
                 ),
                 Text(
-                  '14:22',
-                  style: TextStyle(
+                  _prayerTime,
+                  style: const TextStyle(
                     fontFamily: 'PoppinsBold',
                     fontSize: 28,
-                    color: Colors.black38,
+                    color: Colors.black87,
                   ),
                 ),
-                Text(
-                  '5 Jam 10 Menit',
-                  style: TextStyle(
-                    fontFamily: 'PoppinsRegular',
-                    fontSize: 13,
-                    color: Colors.grey,
+                if (_timeRemaining != null)
+                  Text(
+                    "(${_formatDuration(_timeRemaining!)})",
+                    style: const TextStyle(
+                      fontFamily: 'PoppinsRegular',
+                      fontSize: 13,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -461,18 +492,275 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // =============================
-  // [MENU ITEM WIDGET]
-  // =============================
+  // ================================================================
+  // [13] MENU GRID (Doa, Zakat, Sholat, Kajian)
+  // ================================================================
+  /// 🔹 Grid 4 kolom menampilkan fitur utama aplikasi.
+  ///
+  ///  ┌──────┬──────┬──────┬──────┐
+  ///  │ 🙏 Doa │ 💰 Zakat │ 🕌 Sholat │ 🎥 Kajian │
+  ///  └──────┴──────┴──────┴──────┘
+  Widget _buildMenuGrid() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: GridView.count(
+        crossAxisCount: 4,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        children: [
+          _buildMenuItem('assets/images/ic_menu_doa.png', 'Doa', '/doa-harian'),
+          _buildMenuItem(
+            'assets/images/ic_menu_zakat.png',
+            'Zakat',
+            '/zakat-page',
+          ),
+          _buildMenuItem(
+            'assets/images/ic_menu_jadwal_sholat.png',
+            'Sholat',
+            '/jadwal-sholat',
+          ),
+          _buildMenuItem(
+            'assets/images/ic_menu_video_kajian.png',
+            'Kajian',
+            '/video-kajian',
+          ),
+          _buildMenuItem('assets/images/ic_menu_quran.png', 'Quran', '/quran'),
+          _buildMenuItem(
+            'assets/images/ic_menu_khutbah.png',
+            'Khutbah',
+            '/video-kajian',
+          ),
+          _buildMenuItem(
+            'assets/images/ic_menu_video_kajian.png',
+            'Dzikir',
+            '/video-kajian',
+          ),
+          _buildMenuItem(
+            'assets/images/ic_menu_video_kajian.png',
+            'Berita',
+            '/video-kajian',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================================================================
+  // [14] EXPANSION TILE: JADWAL SHOLAT HARI INI
+  // ================================================================
+  /// 🔹 Menampilkan daftar jadwal sholat hari ini dalam bentuk expandable card.
+  ///
+  ///  ┌───────────── Jadwal Sholat Hari Ini ▼ ──────────────┐
+  ///  │ Imsyak   04:22                                      │
+  ///  │ Shubuh   04:33                                      │
+  ///  │ ...                                                 │
+  ///  └─────────────────────────────────────────────────────┘
+  Widget _buildPrayerExpansion() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 3,
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            initiallyExpanded: false,
+            leading: const Icon(Icons.access_time, color: Colors.amber),
+            title: const Text(
+              "Jadwal Sholat Hari Ini",
+              style: TextStyle(fontFamily: 'PoppinsBold', fontSize: 18),
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: _buildTodayPrayerListCard(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ================================================================
+  // [15] CAROUSEL SLIDER: POSTER / BANNER
+  // ================================================================
+  /// 🔹 Carousel menampilkan poster Islami bergulir otomatis.
+  ///
+  ///  ┌───────────────────────┐
+  ///  │ [🌙 Ramadhan Kareem]  │
+  ///  │ [🕋 Idul Adha]        │
+  ///  └───────────────────────┘
+  ///     ●    ○    ○   (indikator)
+  Widget _buildCarouselSection() {
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        CarouselSlider.builder(
+          itemCount: posterList.length,
+          itemBuilder: (context, index, realIndex) {
+            final poster = posterList[index];
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset(
+                  poster,
+                  fit: BoxFit.fitWidth,
+                  width: double.infinity,
+                ),
+              ),
+            );
+          },
+          options: CarouselOptions(
+            height: 180,
+            autoPlay: true,
+            viewportFraction: 0.7,
+            enlargeCenterPage: true,
+            onPageChanged: (index, reason) {
+              setState(() => _currentIndex = index);
+            },
+          ),
+        ),
+
+        // [15.1] 🔘 Indikator carousel (titik bawah)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: posterList.asMap().entries.map((entry) {
+            return GestureDetector(
+              onTap: () => _controller.animateToPage(entry.key),
+              child: Container(
+                width: 10,
+                height: 10,
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _currentIndex == entry.key
+                      ? Colors.amber
+                      : Colors.grey[400],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  // ================================================================
+  // [16] TABEL / LIST JADWAL SHOLAT HARI INI
+  // ================================================================
+  /// 🔹 Membuat daftar waktu sholat dengan highlight untuk waktu berikutnya.
+  ///
+  ///  ┌─────────────────────────────────────────────┐
+  ///  │ 🕌 Shubuh 04:30 ← waktu berikutnya (kuning) │
+  ///  │ Dzuhur 11:42                                │
+  ///  │ Ashar 15:05                                 │
+  ///  └─────────────────────────────────────────────┘
+  Widget _buildTodayPrayerListCard() {
+    final todayDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    var todaySchedule = _jadwalSholat?.firstWhere(
+      (e) => e['tanggal'] == todayDate,
+      orElse: () => null,
+    );
+
+    if (todaySchedule == null) {
+      return const Text("Tidak ada jadwal untuk hari ini");
+    }
+
+    // [16.1] Koleksi waktu sholat
+    final items = {
+      "Imsyak": todaySchedule['imsyak'],
+      "Shubuh": todaySchedule['shubuh'],
+      "Terbit": todaySchedule['terbit'],
+      "Dhuha": todaySchedule['dhuha'],
+      "Dzuhur": todaySchedule['dzuhur'],
+      "Ashar": todaySchedule['ashr'],
+      "Maghrib": todaySchedule['magrib'],
+      "Isya": todaySchedule['isya'],
+    };
+
+    // [16.2] Render ke daftar card
+    return Column(
+      children: items.entries.map((entry) {
+        final isNext = entry.key == _prayerName;
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: isNext ? Colors.amber.withOpacity(0.15) : Colors.grey[50],
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isNext ? Colors.amber : Colors.grey[300]!,
+              width: isNext ? 1.5 : 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.access_time_filled,
+                    size: 18,
+                    color: isNext ? Colors.amber[800] : Colors.grey[600],
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    entry.key,
+                    style: TextStyle(
+                      fontFamily: 'PoppinsMedium',
+                      fontSize: 15,
+                      color: isNext ? Colors.amber[900] : Colors.black87,
+                      fontWeight: isNext ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                entry.value,
+                style: TextStyle(
+                  fontFamily: 'PoppinsRegular',
+                  fontSize: 15,
+                  color: isNext ? Colors.amber[900] : Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  // ================================================================
+  // [17] WIDGET BUILDER MENU GRID (Reusable Component)
+  // ================================================================
+  /// 🔹 Komponen kecil pembentuk item grid menu.
+  ///
+  ///  ┌──────────────┐
+  ///  │   🕌 Icon    |
+  ///  │  Zakat       │
+  ///  └─────────────┘
+  /// Klik → navigasi ke routeName.
   Widget _buildMenuItem(String iconPath, String title, String routeName) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, routeName);
-        },
         borderRadius: BorderRadius.circular(12),
         splashColor: Colors.amber.withOpacity(0.2),
+        onTap: () => Navigator.pushNamed(context, routeName),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -492,7 +780,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 6),
               Text(
                 title,
-                style: TextStyle(fontFamily: 'PoppinsRegular', fontSize: 13),
+                style: const TextStyle(
+                  fontFamily: 'PoppinsRegular',
+                  fontSize: 13,
+                ),
               ),
             ],
           ),
@@ -500,106 +791,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  // =============================
-  // [MENU GRID SECTION WIDGET]
-  // =============================
-  Widget _buildMenuGridSection() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GridView.count(
-        crossAxisCount: 4, // max 4 baris
-        shrinkWrap: true,
-        mainAxisSpacing: 16,
-        crossAxisSpacing: 16,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          _buildMenuItem(
-            'assets/images/ic_menu_doa.png', // iconPath
-            'Doa', // title
-            '/doa',
-          ), //routeName
-          _buildMenuItem(
-            'assets/images/ic_menu_jadwal_sholat.png',
-            'Sholat',
-            '/doa',
-          ),
-          _buildMenuItem(
-            'assets/images/ic_menu_video_kajian.png',
-            'Kajian',
-            '/doa',
-          ),
-          _buildMenuItem('assets/images/ic_menu_zakat.png', 'Zakat', '/doa'),
-          _buildMenuItem(
-            'assets/images/ic_menu_jadwal_sholat.png', // iconPath
-            'Khutbah', // title
-            '/doa',
-          ),
-        ],
-      ),
-    );
-  }
-
-  // =============================
-  // [CAROUSEL SECTION WIDGET]
-  // =============================
-  Widget _buildCarouselSection() {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        // CAROUSEL CARD
-        CarouselSlider.builder(
-          itemCount: posterList.length,
-          itemBuilder: (context, index, realIndex) {
-            final poster = posterList[index];
-            return Container(
-              margin: EdgeInsets.all(15),
-              child: ClipRRect(
-                borderRadius: BorderRadiusGeometry.circular(20),
-                child: Image.asset(
-                  poster,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            );
-          },
-          options: CarouselOptions(
-            autoPlay: true,
-            height: 270,
-            enlargeCenterPage: true,
-            viewportFraction: 0.7,
-            onPageChanged: (index, reason) {
-              setState(() => _currentIndex = index);
-            },
-          ),
-        ),
-
-        // DOT INDIKATOR CAROUSEL
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: posterList.asMap().entries.map((entry) {
-            return GestureDetector(
-              onTap: () => _currentIndex.animateToPage(entry.key),
-              child: Container(
-                width: 10,
-                height: 10,
-                margin: EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _currentIndex == entry.key
-                      ? Colors.amber
-                      : Colors.grey[400],
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
 }
 
-extension on int {
+extension on CarouselController {
   void animateToPage(int key) {}
 }
