@@ -36,16 +36,16 @@ class _HomePageState extends State<HomePage> {
 
   // Gambar banner carousel
   final List<String> posterList = const [
-    'assets/images/ramadhan-kareem.png',
-    'assets/images/idl-fitr.png',
-    'assets/images/idl-adh.png',
+    'assets/images/ramadan.jpg',
+    'assets/images/idul_fitri.jpg',
+    'assets/images/idul_adha.jpg',
   ];
 
   // Variabel utama UI
   String _location = "Mengambil lokasi...";
   String _prayerName = "Loading...";
   String _prayerTime = "Loading...";
-  String _backgroundImage = 'assets/images/bg_morning.png';
+  String _backgroundImage = 'assets/images/bg_morning.jpg';
   List<dynamic>? _jadwalSholat;
 
   @override
@@ -298,9 +298,9 @@ class _HomePageState extends State<HomePage> {
   // ================================================================
   /// 🔹 Menentukan gambar background pagi / siang / malam.
   String _getBackgroundImage(DateTime now) {
-    if (now.hour < 12) return 'assets/images/bg_morning.png';
-    if (now.hour < 18) return 'assets/images/bg_afternoon.png';
-    return 'assets/images/bg_night.png';
+    if (now.hour < 12) return 'assets/images/bg_header_dashboard_morning.png';
+    if (now.hour < 18) return 'assets/images/bg_header_dashboard_afternoon.png';
+    return 'assets/images/bg_header_dashboard_night.png';
   }
 
   // ================================================================
@@ -524,11 +524,11 @@ class _HomePageState extends State<HomePage> {
           _buildMenuItem(
             'assets/images/ic_menu_video_kajian.png',
             'Kajian',
-            '/video-kajian',
+            '/kajian',
           ),
-          _buildMenuItem('assets/images/ic_menu_quran.png', 'Quran', '/quran'),
+          _buildMenuItem('assets/images/ic_menu_quran.jpg', 'Quran', '/quran'),
           _buildMenuItem(
-            'assets/images/ic_menu_khutbah.png',
+            'assets/images/ic_menu_khutbah.jpg',
             'Khutbah',
             '/video-kajian',
           ),
